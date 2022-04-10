@@ -17,22 +17,13 @@ const fs = require('fs');
 const fsPromises = require('fs').promises;
 
 const getPresets = async () => {
-	console.log('presetPath', presetPath);
 	return (await fsPromises.readdir(presetPath)).map((presetName) => {
 		const preset = require(`${presetPath}/${presetName}`);
-		console.log('preset: ', preset);
 		return {
 			name: presetName.replace('.js', ''),
 			myFunc: preset,
 		};
 	});
-	// return fs.readdirSync(presetPath).map((presetName) => {
-	// 	const preset = require(`${presetPath}/${presetName}`);
-	// 	return {
-	// 		name: presetName.replace('.js', ''),
-	// 		myFunc: preset,
-	// 	};
-	// });
 };
 
 const sendEmail = async ({ to, subject, text, preset } = {}) => {
@@ -42,7 +33,6 @@ const sendEmail = async ({ to, subject, text, preset } = {}) => {
 
 	const allPresets = await getPresets();
 
-	console.log('allPresets', allPresets);
 	if (preset) {
 		presetHTML = allPresets.find((singlePreset) => singlePreset.name === preset.name)?.myFunc(preset);
 		if (!presetHTML) throw new Error(`@lawlzer/email (sendEmail) function requires a preset that exists. "${preset.name}" does not exist.`);
@@ -60,7 +50,7 @@ const sendEmail = async ({ to, subject, text, preset } = {}) => {
 			html: presetHTML + footerHTML,
 		};
 		const response = await SendGrid.send(msg);
-		console.log('response: ', response);
+		console.log('@lawlzer/email email sent response: ', response);
 	} catch (e) {
 		throw new Error('@lawlzer/email sending email error: \n' + e);
 	}
