@@ -6,8 +6,8 @@ SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 const fs = require('fs');
 
-const allPresets = fs.readdirSync('./etc/presets').map((presetName) => {
-	const preset = require(`./etc/presets/${presetName}`);
+const allPresets = fs.readdirSync(`${process.cwd()}/etc/presets`).map((presetName) => {
+	const preset = require(`${process.cwd()}/etc/presets/${presetName}`);
 	return {
 		name: presetName.replace('.js', ''),
 		myFunc: preset,

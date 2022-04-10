@@ -4,7 +4,7 @@
     "dotenv": "^16.0.0"
   },
   "name": "@lawlzer/email",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "(Private package) - Send emails quickly without massive amounts of pain",
   "main": "index.js",
   "devDependencies": {},
