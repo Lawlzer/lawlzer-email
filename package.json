@@ -5,7 +5,7 @@
   },
 
   "name": "@lawlzer/email",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "(Private package) - Send emails quickly without massive amounts of pain",
   "main": "index.js",
   "devDependencies": {},

@@ -4,6 +4,7 @@ module.exports = (preset) => {
 	let output = html;
 	Object.keys(preset).map((key) => {
 		const replaceWith = preset[key];
+		if (!output.includes(`((${key}))`)) throw new Error(`${key} is not in the template`);
 		output = output.replace(`((${key.trim()}))`, replaceWith);
 	});
 	return output;
