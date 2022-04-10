@@ -1,12 +1,26 @@
 require('dotenv').config();
 
-const email = require.main.require('./adapters/email/index.js');
-email.config(require.main.require('./example_sendgrid_config.js'));
+const email = require.main.require('./index.js');
 
 (async () => {
+	// await email.sendEmail({
+	// 	to: 'kevindaspam@gmail.com',
+	// 	subject: 'Subject goes here',
+	// 	text: 'Text goes here',
+	// 	preset: {
+	// 		name: 'email_verification',
+	// 		USERNAME: 'Andrei Bunea',
+	// 		VERIFICATION_CODE: '69696969',
+	// 	},
+	// });
 	await email.sendEmail({
 		to: 'kevindaspam@gmail.com',
 		subject: 'Subject goes here',
 		text: 'Text goes here',
+		preset: {
+			name: 'password_reset',
+			USERNAME: 'Andrei Bunea',
+			CODE: '69696969',
+		},
 	});
 })();
