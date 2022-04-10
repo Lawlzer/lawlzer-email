@@ -1,24 +1,48 @@
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
 const SendGrid = require('@sendgrid/mail');
-if (!process.env?.SENDGRID_API_KEY) throw new Error('@lawlzer/email requires a SENDGRID_API_KEY environment variable.');
-SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+
+let presetPath;
+let fromEmail;
+const config = ({ SENDGRID_API_KEY, preset_path, from_email } = {}) => {
+	if (!SENDGRID_API_KEY) throw new Error('@lawlzer/email.config requires a SENDGRID_API_KEY.');
+	SendGrid.setApiKey(SENDGRID_API_KEY);
+
+	presetPath = preset_path;
+	fromEmail = from_email;
+};
+module.exports.config = config;
 
 const fs = require('fs');
+const fsPromises = require('fs').promises;
 
-const allPresets = fs.readdirSync(`${process.cwd()}/etc/presets`).map((presetName) => {
-	const preset = require(`${process.cwd()}/etc/presets/${presetName}`);
-	return {
-		name: presetName.replace('.js', ''),
-		myFunc: preset,
-	};
-});
+const getPresets = async () => {
+	console.log('presetPath', presetPath);
+	return (await fsPromises.readdir(presetPath)).map((presetName) => {
+		const preset = require(`${presetPath}/${presetName}`);
+		console.log('preset: ', preset);
+		return {
+			name: presetName.replace('.js', ''),
+			myFunc: preset,
+		};
+	});
+	// return fs.readdirSync(presetPath).map((presetName) => {
+	// 	const preset = require(`${presetPath}/${presetName}`);
+	// 	return {
+	// 		name: presetName.replace('.js', ''),
+	// 		myFunc: preset,
+	// 	};
+	// });
+};
 
 const sendEmail = async ({ to, subject, text, preset } = {}) => {
 	if (!to) throw new Error('@lawlzer/email (sendEmail) function requires a to email address.');
 	if (!subject) throw new Error('@lawlzer/email (sendEmail) function requires a subject.');
 	if (!text) throw new Error('@lawlzer/email (sendEmail) function requires a text body.');
 
+	const allPresets = await getPresets();
+
+	console.log('allPresets', allPresets);
 	if (preset) {
 		presetHTML = allPresets.find((singlePreset) => singlePreset.name === preset.name)?.myFunc(preset);
 		if (!presetHTML) throw new Error(`@lawlzer/email (sendEmail) function requires a preset that exists. "${preset.name}" does not exist.`);
@@ -30,7 +54,7 @@ const sendEmail = async ({ to, subject, text, preset } = {}) => {
 	try {
 		const msg = {
 			to: to,
-			from: process.env.FROM_EMAIL,
+			from: fromEmail,
 			subject: subject,
 			text: text,
 			html: presetHTML + footerHTML,

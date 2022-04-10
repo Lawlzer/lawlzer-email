@@ -2,6 +2,11 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const email = require.main.require('./index.js');
+email.config({
+	SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+	preset_path: path.join(__dirname, '/etc/email_presets'),
+	from_email: 'administration@achievevalue.tech',
+});
 
 (async () => {
 	// await email.sendEmail({
