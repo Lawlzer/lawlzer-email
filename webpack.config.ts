@@ -1,14 +1,12 @@
-// // `CheckerPlugin` is optional. Use it if you want async error reporting.
-// // We need this plugin to detect a `--watch` mode. It may be removed later
-// // after https://github.com/webpack/webpack/issues/3460 will be resolved.
+// `CheckerPlugin` is optional. Use it if you want async error reporting.
+// We need this plugin to detect a `--watch` mode. It may be removed later
+// after https://github.com/webpack/webpack/issues/3460 will be resolved.
 
 // const path = require('path');
 // function srcPath(subdir) {
 //     return path.join(__dirname, "src", subdir);
 // }
 
-// module.exports = {
-// };
 
 
 import path from "path";

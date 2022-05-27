@@ -24,6 +24,4 @@ module.exports = {
     "parser": "@typescript-eslint/parser",
     // "tsconfigRootDir": "C:\\Users\\Kevin\\Desktop\\Nerd Stuff\\Typescrippppptttt"
     "tsconfigRootDir": __dirname,
-
-
 };
