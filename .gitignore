@@ -1,2 +1,7 @@
+/legacy
 /node_modules
+/dist
+/temp
+
 .env
+
