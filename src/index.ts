@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 
+import SendGrid from '@sendgrid/mail';
 
 // https://github.com/sendgrid/sendgrid-nodejs
-import SendGrid from '@sendgrid/mail';
 
 const fsPromises = fs.promises;
 
@@ -12,14 +12,19 @@ const fsPromises = fs.promises;
 let fromEmail: string;
 let presetDirectory: string;
 
-export type emailConfig = {
+export type EmailConfig = {
     sendgridAPIKey: string,
     fromEmail: string;
     presetDirectory: string;
 };
 
+export type PresetTemplate = {
+    presetName: string;
+    replaceThese: { [key: string]: string }[];
+};
 
-export async function config(config: emailConfig): Promise<void> {
+
+export async function config(config: EmailConfig): Promise<void> {
     if (!config.sendgridAPIKey) throw new Error('@lawlzer/email - config - sendgridAPIKey is required');
     if (typeof config.sendgridAPIKey !== 'string') throw new Error('@lawlzer/email - config - sendgridAPIKey must be a string');
 
@@ -47,13 +52,8 @@ async function getPreset(presetName: string): Promise<string> {
     return String(preset);
 };
 
-type presetTemplateThing = {
-    presetName: string;
-    replaceThese: { [key: string]: string }[];
 
-};
-
-export async function sendEmail({ to, subject, presets }: { to: string, subject: string, presets: presetTemplateThing[] }): Promise<void> {
+export async function sendEmail({ to, subject, presets }: { to: string, subject: string, presets: PresetTemplate[] }): Promise<void> {
     let html = '';
 
     for await (const preset of presets) {
