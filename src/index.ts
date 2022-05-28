@@ -64,7 +64,6 @@ export async function sendEmail({ to, subject, presets }: { to: string, subject:
         let presetHTML = await getPreset(presetName);
 
         for (const replaceThis of replaceThese) {
-
             for (const key in replaceThis) {
                 const value = replaceThis[key];
                 presetHTML = presetHTML.replaceAll(key, value);
