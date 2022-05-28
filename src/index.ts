@@ -7,15 +7,15 @@ import SendGrid from '@sendgrid/mail';
 
 const fsPromises = fs.promises;
 
-
-
 let fromEmail: string;
 let presetDirectory: string;
+let extraLogs: boolean = false;
 
 export type EmailConfig = {
     sendgridAPIKey: string,
     fromEmail: string;
     presetDirectory: string;
+    extraLogs: boolean; // if true, we will log who we are sending emails to
 };
 
 export type PresetTemplate = {
@@ -33,6 +33,8 @@ export async function config(config: EmailConfig): Promise<void> {
 
     if (!config.presetDirectory) throw new Error('@lawlzer/email - config - presetDirectory is required');
     if (typeof config.presetDirectory !== 'string') throw new Error('@lawlzer/email - config - presetDirectory must be a string');
+
+    if (typeof config.extraLogs === 'boolean') extraLogs = config.extraLogs;
 
     SendGrid.setApiKey(config.sendgridAPIKey);
     fromEmail = config.fromEmail;
@@ -79,7 +81,7 @@ export async function sendEmail({ to, subject, presets }: { to: string, subject:
 
     try {
         await SendGrid.send(msg);
-        console.log('@lawlzer/email - sendEmail - Email automatically sent to:', to);
+        if (extraLogs) console.log('@lawlzer/email - sendEmail - Email automatically sent to:', to);
     } catch (e) {
         throw new Error('@lawlzer/email - sendEmail - Sending email error: \n' + e);
     };
