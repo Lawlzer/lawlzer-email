@@ -6,5 +6,4 @@
 
 /.env
 
-/tsconfig.tsbuildinfo
 /webpack.config.ts
